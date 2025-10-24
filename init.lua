@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -207,6 +207,16 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'cpp', 'c', 'h', 'hpp', 'cc', 'cxx' },
+  callback = function()
+    vim.opt_local.expandtab = true -- Use spaces instead of tabs
+    vim.opt_local.shiftwidth = 4 -- Indent size
+    vim.opt_local.tabstop = 4 -- Number of spaces per tab
+    vim.opt_local.softtabstop = 4 -- Spaces when hitting <Tab>
+  end,
+})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -672,8 +682,16 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
+        clangd = {
+          cmd = { 'clangd', '--background-index' },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'),
+          init_options = {
+            compilationDatabasePath = vim.fn.getcwd(),
+          },
+        },
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -869,7 +887,7 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
@@ -984,7 +1002,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1014,3 +1032,18 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Ensure 'grd' always exists in LSP buffers; lazy-require Telescope and fall back to LSP.
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('my-lsp-grd-robust', { clear = true }),
+  callback = function(ev)
+    vim.keymap.set('n', 'grd', function()
+      local ok, tb = pcall(require, 'telescope.builtin')
+      if ok and tb.lsp_definitions then
+        tb.lsp_definitions()
+      else
+        vim.lsp.buf.definition()
+      end
+    end, { buffer = ev.buf, desc = 'LSP: [G]oto [D]efinition' })
+  end,
+})

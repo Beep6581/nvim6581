@@ -1,7 +1,20 @@
+# Vim swap/backup files
+*.swp
+*.swo
+*~
+
+# Tags file
 tags
+
+# Spell files (personal dictionaries)
+spell/
+
+# Local-only configs
 test.sh
 .luarc.json
-nvim
 
-spell/
-lazy-lock.json
+# Lazy.nvim cache (machine-specific, not for repo)
+.lazy/
+local/
+state.json
+
