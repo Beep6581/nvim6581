@@ -211,10 +211,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = vim.api.nvim_create_augroup('restore-cursor', { clear = true }),
   callback = function()
-    if vim.bo.buftype ~= '' then return end
-    local row = vim.fn.line([['"]])
-    if row > 0 and row <= vim.fn.line('$') then
-      vim.cmd([[normal! g`"]])
+    if vim.bo.buftype ~= '' then
+      return
+    end
+    local row = vim.fn.line [['"]]
+    if row > 0 and row <= vim.fn.line '$' then
+      vim.cmd [[normal! g`"]]
     end
   end,
 })
@@ -529,8 +531,9 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
-      'mason-org/mason-lspconfig.nvim',
+
+      { 'mason-org/mason.nvim', version = '^2', opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', version = '^2' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -771,6 +774,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'clang-format',
+        'cpplint',
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -790,7 +796,7 @@ require('lazy').setup({
       }
     end,
   },
---[[
+  --[[
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
