@@ -11,7 +11,7 @@
   "mason-tool-installer.nvim": { "branch": "main", "commit": "443f1ef8b5e6bf47045cb2217b6f748a223cf7dc" },
   "mason.nvim": { "branch": "main", "commit": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65" },
   "mini.nvim": { "branch": "main", "commit": "48555f1615f08c6318150aacb52bf7d61a5af798" },
-  "nvim-lspconfig": { "branch": "master", "commit": "f6738ef65dabade340b473d4ff2a1ad3352c10e7" },
+  "nvim-lspconfig": { "branch": "master", "commit": "cd576dd72d31ddffcbfa6d064c0dd697ca218758" },
   "nvim-treesitter": { "branch": "master", "commit": "cf12346a3414fa1b06af75c79faebe7f76df080a" },
   "nvim-web-devicons": { "branch": "master", "commit": "4fc505ac7bd7692824a142e96e5f529c133862f8" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
