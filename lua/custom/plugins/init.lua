@@ -14,7 +14,7 @@ return {
     version = '^2',
     opts = {
       -- optional: auto-install some LSPs
-      ensure_installed = { 'clangd', 'pyright', 'lua_ls' },
+      ensure_installed = { 'pyright', 'lua_ls' },
     },
   },
 
