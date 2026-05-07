@@ -764,7 +764,7 @@ require('lazy').setup({
       }
     end,
   },
-
+--[[
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -805,7 +805,7 @@ require('lazy').setup({
       },
     },
   },
-
+--]]
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
