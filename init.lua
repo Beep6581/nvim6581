@@ -208,6 +208,17 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = vim.api.nvim_create_augroup('restore-cursor', { clear = true }),
+  callback = function()
+    if vim.bo.buftype ~= '' then return end
+    local row = vim.fn.line([['"]])
+    if row > 0 and row <= vim.fn.line('$') then
+      vim.cmd([[normal! g`"]])
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'cpp', 'c', 'h', 'hpp', 'cc', 'cxx' },
   callback = function()
