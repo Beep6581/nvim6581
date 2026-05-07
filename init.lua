@@ -1002,7 +1002,7 @@ require('lazy').setup({
   { -- Treesitter parser/query management
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
-      'nvim-treesitter/treesitter-parser-registry',
+      'neovim-treesitter/treesitter-parser-registry',
     },
     lazy = false,
     build = ':TSUpdate',
