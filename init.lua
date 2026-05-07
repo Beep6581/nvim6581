@@ -219,6 +219,8 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
+-- The following is removed so it does not fight guess-indent.nvim rules:
+--[[
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'cpp', 'c', 'h', 'hpp', 'cc', 'cxx' },
   callback = function()
@@ -228,6 +230,7 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.softtabstop = 4 -- Spaces when hitting <Tab>
   end,
 })
+--]]
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -268,7 +271,30 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  {
+    'NMAC427/guess-indent.nvim',
+    main = 'guess-indent',
+    opts = {
+      auto_cmd = true,
+      override_editorconfig = false,
+
+      -- If the file consistently uses tabs, preserve tabs.
+      on_tab_options = {
+        expandtab = false,
+        tabstop = 4,
+        shiftwidth = 4,
+        softtabstop = 0,
+      },
+
+      -- If the file consistently uses spaces, preserve the detected width.
+      on_space_options = {
+        expandtab = true,
+        tabstop = 'detected',
+        shiftwidth = 'detected',
+        softtabstop = -1,
+      },
+    },
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
